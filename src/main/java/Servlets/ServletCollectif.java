@@ -49,6 +49,9 @@ public class ServletCollectif extends HttpServlet {
             case "listeEvenements" :
                 ServletListeEvenements(response);
                 break;
+            case "listeEvenementsInscrit" :
+                ServletListeEvenementsInscrit(response);
+                break;
             case "listeActivites" :
                 ServletListeActivites(response);
                 break;
@@ -82,6 +85,22 @@ public class ServletCollectif extends HttpServlet {
         JpaUtil.creerEntityManager();
         Gson gson = new GsonBuilder().create();
         ServiceResult<List<Event>, Services.Request_Error> available_events_rslt = Services.ListAllEvents();
+        if(available_events_rslt.error == Services.Request_Error.OK) {
+            List<Event> available_events = available_events_rslt.result;
+            response.getWriter().write(new Gson().toJson(available_events));   
+        }
+        JpaUtil.fermerEntityManager();
+        JpaUtil.destroy();
+    }
+    
+    private void ServletListeEvenementsInscrit(HttpServletResponse response) throws IOException {
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        JpaUtil.init();
+        JpaUtil.creerEntityManager();
+        Gson gson = new GsonBuilder().create();
+        int idNumber = 0;//response.
+        ServiceResult<List<Event>, Services.Request_Error> available_events_rslt = Services.ListEventsOfMember(idNumber);
         if(available_events_rslt.error == Services.Request_Error.OK) {
             List<Event> available_events = available_events_rslt.result;
             response.getWriter().write(new Gson().toJson(available_events));   

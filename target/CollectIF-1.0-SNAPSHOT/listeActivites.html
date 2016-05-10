@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Liste des activités</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <div>
+            <h1>Liste des activités</h1>
+            <ul id="activities">
+                
+            </ul>
+        </div>
+        <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+        <script type="text/javascript">
+            $.ajax({
+                url: "ServletCollectif?action=listeActivites",
+                success: function( result ) {
+                    for(r=0;r<result.length;r++){
+                        $( "#activities" ).append("<li> [" + result[r].id + "] "   + result[r].name + " <a href=\"activite.html?id=" + result[r].id + "\">voir</a></li>");
+                    }
+                }
+            });
+        </script>
+    </body>
+</html>

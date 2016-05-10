@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <div id="activity">
+        </div>
+        <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+        <script type="text/javascript">
+            $.urlParam = function(name){
+                var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+                if (results==null){
+                   return null;
+                }
+                else{
+                   return results[1] || 0;
+                }
+            };
+            url = "ServletCollectif?action=activite&id=" + $.urlParam('id');
+            $.ajax({
+                url: url,
+                success: function( result ) {
+                    $( "#activity" ).append("<h1>" + result.name + "</h1>");
+                    if(result.byTeam) 
+                        rep = "oui<br>";
+                    else
+                        rep = "non<br>";
+                    $( "#activity" ).append("<p>Par équipe : " + rep);
+                    $( "#activity" ).append("<p>Nombre de participants : " + result.nbParticipants);
+                    $( "#activity" ).append("</p>");
+                }
+            });
+        </script>
+    </body>
+</html>

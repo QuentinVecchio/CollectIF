@@ -68,13 +68,16 @@ and open the template in the editor.
                 background-color:  rgba(69, 69, 69, 0.1);
                 cursor: pointer;
             }
+            tr {
+                font-size: 17px;
+            }
         </style>
     </head>
     <body>
         <header>
             <img src="img/logo_wide.png"/>
             <h1 id="title">ESPACE ADHÉRENTS</h1>
-            <button id="addEvent" class="btn btn-primary"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> CREER UN EVENEMENT</button>
+            <button id="addEvent" class="btn btn-primary"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> CRÉER UN EVENEMENT</button>
         </header>
         <div>
             <h3>ÉVÈNEMENTS DISPONIBLES</h3>
@@ -86,7 +89,7 @@ and open the template in the editor.
         </div>
 
         <div>
-            <h3>ÉVÈNEMENTS AUXQUELS VOUS ETES INSCRIT</h3>
+            <h3>ÉVÈNEMENTS AUXQUELS VOUS ÊTES INSCRIT</h3>
             <div class="hr"></div>
             <table id="evtInscrit" class="table table-striped">
 
@@ -101,7 +104,7 @@ and open the template in the editor.
                 <label>DATE</label><br>
                 <input type="text" id="dateEvent">
                 <div>
-                    <button class="btn btn-info" id="valideEvent"><span class="glyphicon glyphicon-plus"></span> CREER</button>
+                    <button class="btn btn-info" id="valideEvent"><span class="glyphicon glyphicon-plus"></span> CRÉER</button>
                     <button class="btn btn-danger" id="annuleEvent"><span class="glyphicon glyphicon-remove"></span> ANNULER</button>
                 </div>
             </p>

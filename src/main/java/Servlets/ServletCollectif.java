@@ -11,6 +11,8 @@ import TP1_SI.metier.model.Event;
 import TP1_SI.metier.model.Member;
 import TP1_SI.metier.service.ServiceResult;
 import TP1_SI.metier.service.Services;
+import static TP1_SI.metier.service.Services.Connexion;
+import TP1_SI.metier.service.Services.ConnexionError;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.IOException;
@@ -78,6 +80,12 @@ public class ServletCollectif extends HttpServlet {
                 if(idActivity2 != null && memb2 != null) {
                     int idUser = memb2.getId().intValue();
                     ServletInscriptionEvent(response, idUser, Integer.parseInt(idActivity2));
+                }
+                break;
+            case "connection":
+                String email = request.getParameter("email");
+                if (email != null) {
+                    ServletConnection(session, response, email);
                 }
                 break;
         }
@@ -167,6 +175,23 @@ public class ServletCollectif extends HttpServlet {
         response.getWriter().write(gson.toJson(reponse));   
         JpaUtil.fermerEntityManager();
     }
+     
+    private void ServletConnection ( HttpSession session , HttpServletResponse response, String Email) throws IOException, ServletException {
+        response.setContentType("application/json");
+        JpaUtil.creerEntityManager();
+        ServiceResult<Member, ConnexionError>  ConectionRseult;
+        ConectionRseult = Connexion( Email); 
+        if (ConectionRseult.error == ConnexionError.OK )
+        {
+            session.setAttribute("member",ConectionRseult.result );
+        }       
+        Gson gson = new GsonBuilder().create();
+        String jison =  gson.toJson(ConectionRseult); 
+        response.getWriter().println(jison);        
+        JpaUtil.fermerEntityManager();  
+    }
+     
+     
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.

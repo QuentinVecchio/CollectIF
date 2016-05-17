@@ -181,6 +181,7 @@ public class ServletCollectif extends HttpServlet {
         JpaUtil.creerEntityManager();
         ServiceResult<Member, ConnexionError>  ConectionRseult;
         ConectionRseult = Connexion( Email); 
+        System.out.print(ConectionRseult);
         if (ConectionRseult.error == ConnexionError.OK )
         {
             session.setAttribute("member",ConectionRseult.result );

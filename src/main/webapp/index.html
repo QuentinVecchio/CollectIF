@@ -47,7 +47,38 @@
 
     <body>
         <div id="partieG">
-            coucou
+            <h1 class="page-header" style="padding-left: 1em">CONNECTION </h1>
+            <div class="container" >
+                
+                Email <br/>
+                <input type="email" placeholder="jean.Dupont@insa-lyon.fr" id="ConnectionMail"><br/>
+                <br/>
+                <button class="btn btn-info" id="Connection">CONNECT </button>
+            </div>
+            <h1 class="page-header" style="padding-left: 1em">INSCRIPTION </h1> 
+            <div class="container" >
+
+            
+                FIRST NAME<br/>
+                <input type="text" placeholder="Jean"><br/>
+                <br/>
+
+                LAST NAME <br/>
+                <input type="text" placeholder="Dupont"><br/>
+                <br/>
+
+                EMAIL <br/>
+                <input type="email" placeholder="jean.Dupont@insa-lyon.fr"><br/>
+                <br/>
+
+
+                ADRESSE <br/>
+                <textarea> </textarea><br/>
+                <br/>
+
+                <button class="btn btn-info" id="singin"> SING IN </button>
+            
+            </div>
         </div>
         <div id="hrVertical">
         </div>
@@ -63,5 +94,22 @@
             </div>
             <img id="logoInsa" src="img/insa.png" alt="img/insa.png" style="width: 400px;height: 100px;"/>
         </div>
+        <script src="js/jquery.js" type="text/javascript"></script>
+        <script src="js/bootstrap.min.js" type="text/javascript"></script>
+        <script type="text/javascript">
+            $('#Connection').click(function(){
+                console.log("coucou");
+                $.ajax({
+                    url: "ServletCollectif",
+                    data:{action: 'conection' , email : $('#ConnectionMail').val()},
+                    success: function( result) {
+                        if (result.error == 'OK' )
+                        {
+                            document.location.href="./adherent.html";
+                        }
+                    }
+                });
+            });
+        </script>       
     </body>
 </html>

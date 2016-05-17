@@ -7,7 +7,15 @@ $(function() {
       modal: true
     });
     
+    $( "#dialogInscription" ).dialog({
+      autoOpen: false,
+      modal: true,
+      resizable: false
+    });
+    
+    
     $("#addEvent").click(function(){
+        $( "#dialogEvent" ).css("visibility","visible");
         $( "#dialogEvent" ).dialog( "open" );
         $(".ui-widget-header").css({ "background": "rgb(69, 69, 69)"});
         $(".ui-widget-header").css({ "border": "rgb(69, 69, 69)"});
@@ -35,6 +43,28 @@ $(function() {
     
     $("#annuleEvent").click(function(){
         $( "#dialogEvent" ).dialog( "close" );
+    });
+    
+    $("#valideInscriptionEvent").click(function(){
+        var activId = $("#formActivite").val(); 
+        var date = $("#dateEvent").val();
+        $.ajax({
+            url: "ServletCollectif?action=creationEvenement&idAct=" + activId + "&date=" + date,
+            success: function( result ) {
+                if(result[0] == "ok") {
+                    $( "#dialogEvent" ).dialog( "close" );
+                    chargeEventDispo();
+                    chargeEventInscrit();
+                } else {
+                    alert("Erreur : Event not create");
+                }
+            }
+        });
+        $( "#dialogInscription" ).dialog( "close" );
+    });
+    
+    $("#annuleInscriptionEvent").click(function(){
+        $( "#dialogInscription" ).dialog( "close" );
     });
 
     $("#dateEvent").datepicker();
@@ -69,15 +99,14 @@ $(function() {
             url: "ServletCollectif?action=listeEvenements",
             success: function( result ) {
                 for(r=0;r<result.length;r++){
-                    $( "#evtDisponible" ).append("<tr>");
-                    $( "#evtDisponible" ).append("<td><strong>" + result[r].activity.name + "</strong></td>");   
+                    $( "#evtDisponible" ).append("<tr id=\"tr" + result[r].id + "\" onclick=\"inscriptionEvent(" + result[r].id + ")\"></tr>");
+                    $( "#tr" + result[r].id ).append("<td><strong>" + result[r].activity.name + "</strong></td>");   
                     if(result[r].location == undefined) 
-                        $( "#evtDisponible" ).append("<td><strong>Lieu non déterminé</strong></td>");
+                        $( "#tr" + result[r].id ).append("<td><strong>Lieu non déterminé</strong></td>");
                     else 
-                        $( "#evtDisponible" ).append("<td><strong>" + result[r].location.denomination + "</strong></td>");
-                    $( "#evtDisponible" ).append("<td>" + date(result[r].date) + "</td>"); 
-                    $( "#evtDisponible" ).append("<td><strong>" + result[r].members.length + "</strong> participants / " + result[r].activity.nbParticipants + "</td>"); 
-                    $( "#evtDisponible" ).append("</tr>");
+                        $( "#tr" + result[r].id ).append("<td><strong>" + result[r].location.denomination + "</strong></td>");
+                    $( "#tr" + result[r].id ).append("<td>" + date(result[r].date) + "</td>"); 
+                    $( "#tr" + result[r].id ).append("<td><strong>" + result[r].members.length + "</strong> participants / " + result[r].activity.nbParticipants + "</td>"); 
                 }
             }
         });

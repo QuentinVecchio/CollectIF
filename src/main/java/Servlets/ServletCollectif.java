@@ -61,14 +61,23 @@ public class ServletCollectif extends HttpServlet {
             case "creationEvenement" :
                 String idActivity = request.getParameter("idAct");
                 Member memb = null;
-                memb = session.getParameter("member");
+                memb = (Member) session.getAttribute("member");
                 String date = request.getParameter("date");
                 if(idActivity != null && date != null && memb != null) {
                     int year = Integer.parseInt(date.split("/")[2]);
                     int month = Integer.parseInt(date.split("/")[0]);
                     int day = Integer.parseInt(date.split("/")[1]);
-                    Long idUser = memb.getId();
+                    int idUser = memb.getId().intValue();
                     ServletCreationEvent(response, idUser, Integer.parseInt(idActivity), year, month, day);
+                }
+                break;
+            case "inscriptionEvenement" :
+                String idActivity2 = request.getParameter("idAct");
+                Member memb2 = null;
+                memb2 = (Member) session.getAttribute("member");
+                if(idActivity2 != null && memb2 != null) {
+                    int idUser = memb2.getId().intValue();
+                    ServletInscriptionEvent(response, idUser, Integer.parseInt(idActivity2));
                 }
                 break;
         }
@@ -83,7 +92,7 @@ public class ServletCollectif extends HttpServlet {
             List<Activity> activities = activities_rslt.result;
             for(Activity activite : activities) {
                 if(activite.getId() == id) {
-                    response.getWriter().write(new Gson().toJson(activite));   
+                    response.getWriter().write(gson.toJson(activite));   
                     break;
                 }
             }
@@ -98,7 +107,7 @@ public class ServletCollectif extends HttpServlet {
         ServiceResult<List<Event>, Services.Request_Error> available_events_rslt = Services.ListAllEvents();
         if(available_events_rslt.error == Services.Request_Error.OK) {
             List<Event> available_events = available_events_rslt.result;
-            response.getWriter().write(new Gson().toJson(available_events));   
+            response.getWriter().write(gson.toJson(available_events));   
         }
         JpaUtil.fermerEntityManager();
     }
@@ -112,7 +121,7 @@ public class ServletCollectif extends HttpServlet {
         ServiceResult<List<Event>, Services.Request_Error> available_events_rslt = Services.ListEventsOfMember(idNumber);
         if(available_events_rslt.error == Services.Request_Error.OK) {
             List<Event> available_events = available_events_rslt.result;
-            response.getWriter().write(new Gson().toJson(available_events));   
+            response.getWriter().write(gson.toJson(available_events));   
         }
         JpaUtil.fermerEntityManager();
     }
@@ -125,7 +134,7 @@ public class ServletCollectif extends HttpServlet {
         ServiceResult<List<Activity>, Services.Request_Error> activities_rslt = Services.ListActivities();
         if(activities_rslt.error == Services.Request_Error.OK) {
             List<Activity> activities = activities_rslt.result;
-            response.getWriter().write(new Gson().toJson(activities));   
+            response.getWriter().write(gson.toJson(activities));   
         }
         JpaUtil.fermerEntityManager();
     }
@@ -134,14 +143,28 @@ public class ServletCollectif extends HttpServlet {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         JpaUtil.creerEntityManager();
-        Gson gson = new GsonBuilder().create();
         Date date = new Date(year,month,day);
+        Gson gson = new GsonBuilder().create();
         ServiceResult<Event, Services.Request_Error> rep = Services.CreateEvent(idUser, idActivity,date);
         String reponse = "error";
         if(rep.error == Services.Request_Error.OK) {
             reponse = "ok";
         }
-        response.getWriter().write(new Gson().toJson(reponse));   
+        response.getWriter().write(gson.toJson(reponse));   
+        JpaUtil.fermerEntityManager();
+    }
+    
+     private void ServletInscriptionEvent(HttpServletResponse response, int idUser, int idActivity) throws IOException {
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        JpaUtil.creerEntityManager();
+        Gson gson = new GsonBuilder().create();
+        Services.Request_Error rep = Services.JoinEvent(idUser, idActivity);
+        String reponse = "error";
+        if(rep == Services.Request_Error.OK) {
+            reponse = "ok";
+        }
+        response.getWriter().write(gson.toJson(reponse));   
         JpaUtil.fermerEntityManager();
     }
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

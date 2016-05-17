@@ -53,27 +53,34 @@
                 Email <br/>
                 <input type="email" placeholder="jean.Dupont@insa-lyon.fr" id="ConnectionMail"><br/>
                 <br/>
+                
+                <div class="alert alert-warning" id="login_error" style="display: none">
+		Votre mail est incorecte. Merci de réessayer.		
+                </div>
+                
                 <button class="btn btn-info" id="Connection">CONNECT </button>
+                
             </div>
             <h1 class="page-header" style="padding-left: 1em">INSCRIPTION </h1> 
             <div class="container" >
 
             
                 FIRST NAME<br/>
-                <input type="text" placeholder="Jean"><br/>
+                <input type="text" placeholder="Jean" id="singinFName"><br/>
                 <br/>
+                
 
                 LAST NAME <br/>
-                <input type="text" placeholder="Dupont"><br/>
+                <input type="text" placeholder="Dupont" id="singinLName"><br/>
                 <br/>
 
                 EMAIL <br/>
-                <input type="email" placeholder="jean.Dupont@insa-lyon.fr"><br/>
+                <input type="email" placeholder="jean.Dupont@insa-lyon.fr" id="singinEmail"><br/>
                 <br/>
 
 
                 ADRESSE <br/>
-                <textarea> </textarea><br/>
+                <input type="text" id="adresse" > <br/>
                 <br/>
 
                 <button class="btn btn-info" id="singin"> SING IN </button>
@@ -107,9 +114,46 @@
                         {
                             document.location.href="./adherent.html";
                         }
+                        else{
+                            $('#login_error').show();
+                        }
                     }
                 });
             });
-        </script>       
+        </script> 
+        <script type="text/javascript">
+            $('#singin').click(function(){
+                $.ajax({
+                    url: "./ServletCollectif",
+                    data:{action: 'singin' , Prenom : $('#singinFName').val(), nom : $('#singinLName').val(), email : $('#singinEmail').val(), adresse : $('#adresse').val()},
+                    success: function( result) {
+                        console.log(result.error);
+                        if (result.error == 'OK' )
+                        {
+                            document.location.href="./adherent.html";
+                        }
+                        switch(result.error) {
+                            case 'OK':
+                                document.location.href="./adherent.html";
+                                break;
+                            case 'EMPTY_FIRSTNAME':
+                                break;
+                            case 'EMPTY_ADDRESS':
+                                break;
+                            case 'EMPTY_EMAIL':
+                                break;
+                            case 'WRONG_ADDRESS':
+                                break;
+                            case 'EMPTY_FIRSTNAME':
+                                break;
+                            case 'DATABASE_ERROR':
+                                break;
+                            case 'WRONG_ADDRESS':
+                                break;
+                        }
+                    }
+                });
+            });
+        </script>
     </body>
 </html>

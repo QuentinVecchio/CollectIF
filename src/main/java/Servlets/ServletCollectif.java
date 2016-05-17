@@ -11,6 +11,8 @@ import TP1_SI.metier.model.Event;
 import TP1_SI.metier.model.Member;
 import TP1_SI.metier.service.ServiceResult;
 import TP1_SI.metier.service.Services;
+import static TP1_SI.metier.service.Services.Connexion;
+import TP1_SI.metier.service.Services.ConnexionError;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.IOException;
@@ -61,19 +63,19 @@ public class ServletCollectif extends HttpServlet {
             case "creationEvenement" :
                 String idActivity = request.getParameter("idAct");
                 Member memb = null;
-                memb = session.getParameter("member");
+                //memb = session.getParameter("member");
                 String date = request.getParameter("date");
                 if(idActivity != null && date != null && memb != null) {
                     int year = Integer.parseInt(date.split("/")[2]);
                     int month = Integer.parseInt(date.split("/")[0]);
                     int day = Integer.parseInt(date.split("/")[1]);
                     Long idUser = memb.getId();
-                    ServletCreationEvent(response, idUser, Integer.parseInt(idActivity), year, month, day);
+                   // ServletCreationEvent(response, idUser, Integer.parseInt(idActivity), year, month, day);
                 }
                 break;
             case "conection":
                 String email = request.getParameter("email");
-                ServletListeConnection(response, email );
+                ServletListeConnection(session, response, email);
                 
                 break;
         }
@@ -150,7 +152,7 @@ public class ServletCollectif extends HttpServlet {
         JpaUtil.fermerEntityManager();
     }
     
-         private void ServletListeConnection (HttpServletResponse response, String Email) throws IOException, ServletException {
+         private void ServletListeConnection ( HttpSession session , HttpServletResponse response, String Email) throws IOException, ServletException {
         response.setContentType("application/json");
 
         JpaUtil.init();
@@ -159,8 +161,11 @@ public class ServletCollectif extends HttpServlet {
         ServiceResult<Member, ConnexionError>  ConectionRseult;
         ConectionRseult = Connexion( Email);
         
-        
-
+       if (ConectionRseult.error == ConnexionError.OK )
+       {
+           session.setAttribute("member",ConectionRseult.result );
+       }
+                
         Gson gson = new GsonBuilder().create();
         String jison =  gson.toJson(ConectionRseult); 
         response.getWriter().println(jison);

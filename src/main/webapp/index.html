@@ -50,7 +50,10 @@
                     url: "./ServletCollectif",
                     data:{action: 'conection' , email : $('#ConnectionMail').val()},
                     success: function( result) {
-                        console.log (result.valueOf());
+                        if (result.error == 'OK' )
+                        {
+                            document.location.href="./adherent.html";
+                        }
                     }
                 });
             });

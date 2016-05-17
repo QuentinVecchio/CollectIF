@@ -71,6 +71,11 @@ public class ServletCollectif extends HttpServlet {
                     ServletCreationEvent(response, idUser, Integer.parseInt(idActivity), year, month, day);
                 }
                 break;
+            case "conection":
+                String email = request.getParameter("email");
+                ServletListeConnection(response, email );
+                
+                break;
         }
     }
 
@@ -144,6 +149,28 @@ public class ServletCollectif extends HttpServlet {
         response.getWriter().write(new Gson().toJson(reponse));   
         JpaUtil.fermerEntityManager();
     }
+    
+         private void ServletListeConnection (HttpServletResponse response, String Email) throws IOException, ServletException {
+        response.setContentType("application/json");
+
+        JpaUtil.init();
+        JpaUtil.creerEntityManager();
+
+        ServiceResult<Member, ConnexionError>  ConectionRseult;
+        ConectionRseult = Connexion( Email);
+        
+        
+
+        Gson gson = new GsonBuilder().create();
+        String jison =  gson.toJson(ConectionRseult); 
+        response.getWriter().println(jison);
+
+        
+        
+        JpaUtil.fermerEntityManager();
+        JpaUtil.destroy();
+        
+     }
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.

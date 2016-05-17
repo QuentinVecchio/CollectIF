@@ -5,9 +5,56 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
     </head>
-    <body>
-        <h1>Bienvenue</h1>
-        <p><a href="listeActivites.html">Voir la liste des activités</a></p>
+    <body style="color: 1010f0">
+        <div>
+            <a href="./listActivites.html">listActivites</a>
+            <h1 class="page-header" style="padding-left: 1em">CONNECTION </h1>
+            <div class="container" >
+                
+                Email <br/>
+                <input type="email" placeholder="jean.Dupont@insa-lyon.fr" id="ConnectionMail"><br/>
+                <br/>
+                <button class="btn btn-info" id="Connection">CONNECT </button>
+            </div>
+            <h1 class="page-header" style="padding-left: 1em">INSCRIPTION </h1> 
+            <div class="container" >
+
+            
+                FIRST NAME<br/>
+                <input type="text" placeholder="Jean"><br/>
+                <br/>
+
+                LAST NAME <br/>
+                <input type="text" placeholder="Dupont"><br/>
+                <br/>
+
+                EMAIL <br/>
+                <input type="email" placeholder="jean.Dupont@insa-lyon.fr"><br/>
+                <br/>
+
+
+                ADRESSE <br/>
+                <textarea> </textarea><br/>
+                <br/>
+
+                <button class="btn btn-info" id="singin"> SING IN </button>
+            
+            </div>
+            
+        </div>
         <script src="js/jquery.js" type="text/javascript"></script>
+        <script src="js/bootstrap.min.js" type="text/javascript"></script>
+        <script type="text/javascript">
+            $('#Connection').click(function(){
+                $.ajax({
+                    url: "./ServletCollectif",
+                    data:{action: 'conection' , email : $('#ConnectionMail').val()},
+                    success: function( result) {
+                        console.log (result.valueOf());
+                    }
+                });
+            });
+        </script>
+            
     </body>
 </html>

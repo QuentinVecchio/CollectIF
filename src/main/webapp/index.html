@@ -100,8 +100,8 @@
             $('#Connection').click(function(){
                 console.log("coucou");
                 $.ajax({
-                    url: "ServletCollectif",
-                    data:{action: 'conection' , email : $('#ConnectionMail').val()},
+                    url: "./ServletCollectif",
+                    data:{action: 'connection' , email : $('#ConnectionMail').val()},
                     success: function( result) {
                         if (result.error == 'OK' )
                         {

@@ -13,6 +13,7 @@ import TP1_SI.metier.service.ServiceResult;
 import TP1_SI.metier.service.Services;
 import static TP1_SI.metier.service.Services.Connexion;
 import TP1_SI.metier.service.Services.ConnexionError;
+import static TP1_SI.metier.service.Services.Inscription;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.IOException;
@@ -84,9 +85,14 @@ public class ServletCollectif extends HttpServlet {
                 break;
             case "connection":
                 String email = request.getParameter("email");
-                if (email != null) {
-                    ServletConnection(session, response, email);
-                }
+                ServletConnection(session, response, email);
+                break;
+            case "singin":
+                String sEmail = request.getParameter("email");
+                String sNom = request.getParameter("nom");
+                String sPrenom = request.getParameter("Prenom");
+                String sAdresse = request.getParameter("Prenom");
+                ServletSingin(session, response, sEmail, sNom, sPrenom, sAdresse);
                 break;
         }
     }
@@ -181,6 +187,22 @@ public class ServletCollectif extends HttpServlet {
         JpaUtil.creerEntityManager();
         ServiceResult<Member, ConnexionError>  ConectionRseult;
         ConectionRseult = Connexion( Email); 
+        System.out.print(ConectionRseult);
+        if (ConectionRseult.error == ConnexionError.OK )
+        {
+            session.setAttribute("member",ConectionRseult.result );
+        }       
+        Gson gson = new GsonBuilder().create();
+        String jison =  gson.toJson(ConectionRseult); 
+        response.getWriter().println(jison);        
+        JpaUtil.fermerEntityManager();  
+    }
+        private void ServletSingin ( HttpSession session , HttpServletResponse response, String mail, String nom, String prenom, String adresse ) throws IOException, ServletException {
+        response.setContentType("application/json");
+        JpaUtil.creerEntityManager();
+        ServiceResult<Member, ConnexionError>  ConectionRseult;
+        ConectionRseult = Inscription( nom,  prenom,  mail,  adresse); 
+        System.out.print(ConectionRseult);
         if (ConectionRseult.error == ConnexionError.OK )
         {
             session.setAttribute("member",ConectionRseult.result );

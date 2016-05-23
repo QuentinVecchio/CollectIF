@@ -19,6 +19,11 @@
                 bottom: 0px;
                 top : 0px;
             }
+            .hrHorizontal {
+                background-color: rgb(51,51,51);
+                width: 101%;  
+                height: 1px;
+            }
             #partieD {
                 width: 68.5%;
                 padding: 20px;
@@ -30,89 +35,113 @@
             }
             
             #textPresentation {
-                padding: 20px;
+                padding-left: 30px;
                 display: block;
                 margin-top: 100px;
                 vertical-align: middle;
             }
             #textPresentation p{
-                font-size: 20px;
+                font-size: 23px;
             }
             #logoInsa {
-                position: relative;
-                
+                position : absolute;
+                width: 400px;
+                height: 100px;
+                bottom: 10px;
+                margin-left: 25%;
+            }
+            h1 {
+                font-size: 55px;
+            }
+            .formulaire {
+                width: 50%;
+                margin-left:auto;
+                margin-right:auto;  
+                margin-top: 10px;
+            }
+            .formulaire input, .formulaire textarea {
+                width: 100%;
+                text-align: left;
+            }
+            .formulaire label {
+                font-size: 20px;
+                color : rgb(52,52,52);
+            }
+            .formError {
+                border : 1px solid rgba(250,0,0,0.5);
+                color : rgba(250,0,0,0.5);
             }
 	</style>
     </head>
 
     <body>
         <div id="partieG">
-            <h1 class="page-header" style="padding-left: 1em">CONNECTION </h1>
-            <div class="container" >
-                
-                Email <br/>
-                <input type="email" placeholder="jean.Dupont@insa-lyon.fr" id="ConnectionMail"><br/>
-                <br/>
-                
-                <div class="alert alert-warning" id="login_error" style="display: none">
-		Votre mail est incorecte. Merci de réessayer.		
+            <h1 style="padding-left: 35px;">CONNECTION </h1><div class="hrHorizontal"></div>
+                <div class="formulaire" >
+
+                    <label for="ConnectionMail">Email</label> <br/>
+                    <input type="email" placeholder="jean.Dupont@insa-lyon.fr" name = "ConnectionMail" id="ConnectionMail"><br/>
+                    <br/>
+
+                    <div class="alert alert-warning" id="login_error" style="display: none">
+                    Votre mail est incorecte. Merci de réessayer.		
+                    </div>
+
+                    <button class="btn btn-info" id="Connection">CONNECT </button>
+
                 </div>
-                
-                <button class="btn btn-info" id="Connection">CONNECT </button>
-                
-            </div>
-            <h1 class="page-header" style="padding-left: 1em">INSCRIPTION </h1> 
-            <div class="container" >
-
+            <h1 style="padding-left: 35px;">INSCRIPTION </h1> <div class="hrHorizontal"></div>
+                <div class="formulaire" >
             
-                FIRST NAME<br/>
-                <input type="text" placeholder="Jean" id="singinFName"><br/>
-                <br/>
-                
-
-                LAST NAME <br/>
-                <input type="text" placeholder="Dupont" id="singinLName"><br/>
-                <br/>
-
-                EMAIL <br/>
-                <input type="email" placeholder="jean.Dupont@insa-lyon.fr" id="singinEmail"><br/>
-                <br/>
+                    <label for="singinFName">FIRST NAME</label><br/>
+                    <input type="text" placeholder="Jean" name="singinFName" id="singinFName"><br/>
+                    <br/>
 
 
-                ADRESSE <br/>
-                <input type="text" id="adresse" > <br/>
-                <br/>
+                    <label for="singinLName">LAST NAME </label><br/>
+                    <input type="text" placeholder="Dupont" name="singinLName" id="singinLName"><br/>
+                    <br/>
 
-                <button class="btn btn-info" id="singin"> SING IN </button>
+                    <label for="singinEmail">EMAIL </label><br/>
+                    <input type="email" placeholder="jean.Dupont@insa-lyon.fr" name="singinEmail" id="singinEmail"><br/>
+                    <br/>
+
+
+                    <label for="adresse">ADDRESS </label><br/>
+                    <textarea id="adresse" name="adresse" rows="10" cols="30">Your ADDRESS.</textarea>
+                    <br/><br/>
+
+                    <button class="btn btn-info" id="singin"> SING IN </button>
             
-            </div>
+                </div>
         </div>
         <div id="hrVertical">
         </div>
         <div id="partieD">
             <img id="logoCollectif" src="img/logo_wide.png" alt="img/logo_wide.png" style="width: 200px;height: 200px;"/>
             <div id="textPresentation">
-                <h2>COLLECT'IF</h2>
+                <h1>COLLECT'IF</h1>
                 <p>
                     Vous souhaitez faire une partie de tarot jeudi prochain ? Un match de volley le samedi de la 
                     semaine prochaine ? COLLECT'IF, association évenementielle locale, vous trouve des co-équipers et 
                     met à votre disposition un local pour votre rencontre.
                 </p>
             </div>
-            <img id="logoInsa" src="img/insa.png" alt="img/insa.png" style="width: 400px;height: 100px;"/>
+            <img id="logoInsa" src="img/insa.png" alt="img/insa.png" />
         </div>
         <script src="js/jquery.js" type="text/javascript"></script>
         <script src="js/bootstrap.min.js" type="text/javascript"></script>
         <script type="text/javascript">
             $('#Connection').click(function(){
-                console.log("coucou");
                 $.ajax({
-                    url: "./ServletCollectif",
+                    url: "ServletCollectif",
                     data:{action: 'connection' , email : $('#ConnectionMail').val()},
                     success: function( result) {
-                        if (result.error == 'OK' )
-                        {
-                            document.location.href="./adherent.html";
+                        if (result.error == 'OK' ) {
+                            document.location.href="adherent.html";
+                        }
+                        else if(result == 'admin') {
+                            document.location.href="dashboard.html";
                         }
                         else{
                             $('#login_error').show();
@@ -120,37 +149,47 @@
                     }
                 });
             });
-        </script> 
-        <script type="text/javascript">
+    
             $('#singin').click(function(){
-                $.ajax({
-                    url: "./ServletCollectif",
-                    data:{action: 'singin' , Prenom : $('#singinFName').val(), nom : $('#singinLName').val(), email : $('#singinEmail').val(), adresse : $('#adresse').val()},
+                $('input').attr("class","");
+                $('textarea').attr("class","");
+                $.ajax({ 
+                    url: "ServletCollectif",
+                    data:{action: 'singin' , prenom : $('#singinFName').val(), nom : $('#singinLName').val(), email : $('#singinEmail').val(), adresse : $('#adresse').val()},
                     success: function( result) {
-                        console.log(result.error);
-                        if (result.error == 'OK' )
-                        {
-                            document.location.href="./adherent.html";
-                        }
                         switch(result.error) {
                             case 'OK':
                                 document.location.href="./adherent.html";
                                 break;
                             case 'EMPTY_FIRSTNAME':
+                                $('#singinFName').attr("class","formError");
+                                break;
+                            case 'EMPTY_LASTNAME':
+                                $('#singinLName').attr("class","formError");
                                 break;
                             case 'EMPTY_ADDRESS':
+                                $('#adresse').attr("class","formError");
                                 break;
                             case 'EMPTY_EMAIL':
+                                $('#singinEmail').attr("class","formError");
                                 break;
                             case 'WRONG_ADDRESS':
-                                break;
-                            case 'EMPTY_FIRSTNAME':
+                                $('#adresse').attr("class","formError");
                                 break;
                             case 'DATABASE_ERROR':
+                                $('input').attr("class","formError");
+                                $('textarea').attr("class","formError");
                                 break;
                             case 'WRONG_ADDRESS':
+                                $('#adresse').attr("class","formError");
+                                break;
+                            case 'BAD_EMAIL': 
+                                $('#singinEmail').attr("class","formError");
                                 break;
                         }
+                    },
+                    error: function( ) {
+                        alert("Erreur interne");
                     }
                 });
             });

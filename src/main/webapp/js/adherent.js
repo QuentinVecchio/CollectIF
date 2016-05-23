@@ -14,13 +14,23 @@ $(function() {
     });
     
     
+    $("#deconnexion").click(function(){
+        $.ajax({
+            url: "ServletCollectif?action=deconnection",
+            success: function( result ) {
+                document.location.href = "./index.html";
+            }
+        }); 
+    });
+    
+    
     $("#addEvent").click(function(){
         $( "#dialogEvent" ).css("visibility","visible");
         $( "#dialogEvent" ).dialog( "open" );
         $(".ui-widget-header").css({ "background": "rgb(69, 69, 69)"});
         $(".ui-widget-header").css({ "border": "rgb(69, 69, 69)"});
         $(".ui-widget-header").css({ "border-radius": "0px"});
-        $(".ui-icon ui-icon-closethick").css({ "color": "black"});  
+        $(".ui-icon ui-icon-closethick").css({ "color": "black"});
     });
     
     $("#valideEvent").click(function(){
@@ -29,8 +39,10 @@ $(function() {
         $.ajax({
             url: "ServletCollectif?action=creationEvenement&idAct=" + activId + "&date=" + date,
             success: function( result ) {
-                if(result[0] == "ok") {
-                    $( "#dialogEvent" ).dialog( "close" );
+                if(result == "ok") {
+                    $( "#dialogEvent" ).dialog( "close" ); 
+                    $("tr").remove();
+                    $("td").remove();
                     chargeEventDispo();
                     chargeEventInscrit();
                 } else {
@@ -46,17 +58,15 @@ $(function() {
     });
     
     $("#valideInscriptionEvent").click(function(){
-        var activId = $("#formActivite").val(); 
-        var date = $("#dateEvent").val();
+        var activId = $("#idAct").val(); 
         $.ajax({
-            url: "ServletCollectif?action=creationEvenement&idAct=" + activId + "&date=" + date,
+            url: "ServletCollectif?action=inscriptionEvenement&idAct=" + activId,
             success: function( result ) {
-                if(result[0] == "ok") {
+                if(result == "OK") {
                     $( "#dialogEvent" ).dialog( "close" );
-                    chargeEventDispo();
+                    $("evtInscrit tr").remove();
+                    $("evtInscrit td").remove();
                     chargeEventInscrit();
-                } else {
-                    alert("Erreur : Event not create");
                 }
             }
         });
@@ -96,17 +106,17 @@ $(function() {
     //Charge des evenements disponibles
     function chargeEventDispo() {
         $.ajax({
-            url: "ServletCollectif?action=listeEvenements",
+            url: "ServletCollectif?action=listeEvenementsDispo",
             success: function( result ) {
                 for(r=0;r<result.length;r++){
-                    $( "#evtDisponible" ).append("<tr id=\"tr" + result[r].id + "\" onclick=\"inscriptionEvent(" + result[r].id + ")\"></tr>");
-                    $( "#tr" + result[r].id ).append("<td><strong>" + result[r].activity.name + "</strong></td>");   
+                    $( "#evtDisponible" ).append("<tr id=\"trDispo" + result[r].id + "\" onclick=\"inscriptionEvent(" + result[r].id + ")\"></tr>");
+                    $( "#trDispo" + result[r].id ).append("<td><strong>" + result[r].activity.name + "</strong></td>");   
                     if(result[r].location == undefined) 
-                        $( "#tr" + result[r].id ).append("<td><strong>Lieu non déterminé</strong></td>");
+                        $( "#trDispo" + result[r].id ).append("<td><strong>Lieu non déterminé</strong></td>");
                     else 
-                        $( "#tr" + result[r].id ).append("<td><strong>" + result[r].location.denomination + "</strong></td>");
-                    $( "#tr" + result[r].id ).append("<td>" + date(result[r].date) + "</td>"); 
-                    $( "#tr" + result[r].id ).append("<td><strong>" + result[r].members.length + "</strong> participants / " + result[r].activity.nbParticipants + "</td>"); 
+                        $( "#trDispo" + result[r].id ).append("<td><strong>" + result[r].location.denomination + "</strong></td>");
+                    $( "#trDispo" + result[r].id ).append("<td>" + date(result[r].date) + "</td>"); 
+                    $( "#trDispo" + result[r].id ).append("<td><strong>" + result[r].members.length + "</strong> participants / " + result[r].activity.nbParticipants + "</td>"); 
                 }
             }
         });
@@ -118,15 +128,14 @@ $(function() {
             url: "ServletCollectif?action=listeEvenementsInscrit",
             success: function( result ) {
                 for(r=0;r<result.length;r++){
-                    $( "#evt" ).append("<tr>");
-                    $( "#evtInscrit" ).append("<td><strong>" + result[r].activity.name + "</strong></td>");   
+                    $( "#evtInscrit" ).append("<tr id=\"trIns" + result[r].id + "\"></tr>");
+                    $( "#trIns" + result[r].id ).append("<td><strong>" + result[r].activity.name + "</strong></td>");   
                     if(result[r].location == undefined) 
-                        $( "#evtInscrit" ).append("<td><strong>Lieu non déterminé</strong></td>");
+                        $( "#trIns" + result[r].id ).append("<td><strong>Lieu non déterminé</strong></td>");
                     else 
-                        $( "#evtInscrit" ).append("<td><strong>" + result[r].location.denomination + "</strong></td>");
-                    $( "#evtInscrit" ).append("<td>" + date(result[r].date) + "</td>"); 
-                    $( "#evtInscrit" ).append("<td><strong>" + result[r].members.length + "</strong> participants / " + result[r].activity.nbParticipants + "</td>"); 
-                    $( "#evtInscrit" ).append("</tr>");
+                        $( "#trIns" + result[r].id ).append("<td><strong>" + result[r].location.denomination + "</strong></td>");
+                    $( "#trIns" + result[r].id ).append("<td>" + date(result[r].date) + "</td>"); 
+                    $( "#trIns" + result[r].id ).append("<td><strong>" + result[r].members.length + "</strong> participants / " + result[r].activity.nbParticipants + "</td>"); 
                 }
             }
         });

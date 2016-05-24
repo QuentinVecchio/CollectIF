@@ -29,9 +29,10 @@ $(function() {
                         url: "ServletCollectif?action=distanceMoyenne&idEvent=" + result[r].id,
                         async: false, 
                         success: function( res ) {
-                            res = res[1];
+                            if(res.length == 2)
+                                res = res[1];
                             var div = "<div class=\"nomActivity\">" + result[r].activity.name +  "</div>";
-                            if(res == "not location")
+                            if(res == "WRONG_LIEU_ID")
                                 div += "<div class=\"distance\">DISTANCE MOYENNE</br>? Km</div>";
                             else
                                 div += "<div class=\"distance\">DISTANCE MOYENNE</br>" + res + " Km</div>";              
@@ -56,7 +57,7 @@ $(function() {
         });
     });
     var now = new Date();
-    $('#dateEvent').val((now.getMonth() + 1)+ "/" + (now.getDate()-1) + "/" + now.getFullYear());
+    $('#dateEvent').val((now.getMonth() + 1)+ "/" + (now.getDate()) + "/" + now.getFullYear());
     $('#dateEvent').trigger( "change" );
 });
     
@@ -115,7 +116,7 @@ function initialize() {
                             data:{location: this.title, date : date},
                             success: function( result ) {
                                 if(result.length > 0) {
-                                    var div = "<div class=\"afficheInfo\"><h3>" + result[0].location.description + "</h3>";
+                                    var div = "<div style=\"width : 400px;\" class=\"afficheInfo\"><h3>" + result[0].location.description + "</h3>";
                                     div += "<ul>"
                                     for(var r = 0;r<result.length;r++) {
                                         div += "<li>";

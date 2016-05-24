@@ -76,7 +76,7 @@
 
     <body>
         <div id="partieG">
-            <h1 style="padding-left: 35px;">CONNECTION </h1><div class="hrHorizontal"></div>
+            <h1 style="padding-left: 35px;">CONNEXION </h1><div class="hrHorizontal"></div>
                 <div class="formulaire" >
 
                     <label for="ConnectionMail">Email</label> <br/>
@@ -137,7 +137,7 @@
                     url: "ServletCollectif",
                     data:{action: 'connection' , email : $('#ConnectionMail').val()},
                     success: function( result) {
-                        if (result.error == 'OK' ) {
+                        if (result == 'OK' ) {
                             document.location.href="adherent.html";
                         }
                         else if(result == 'admin') {
@@ -157,7 +157,7 @@
                     url: "ServletCollectif",
                     data:{action: 'singin' , prenom : $('#singinFName').val(), nom : $('#singinLName').val(), email : $('#singinEmail').val(), adresse : $('#adresse').val()},
                     success: function( result) {
-                        switch(result.error) {
+                        switch(result) {
                             case 'OK':
                                 document.location.href="./adherent.html";
                                 break;

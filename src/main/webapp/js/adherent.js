@@ -39,10 +39,8 @@ $(function() {
         $.ajax({
             url: "ServletCollectif?action=creationEvenement&idAct=" + activId + "&date=" + date,
             success: function( result ) {
-                if(result == "ok") {
+                if(result == "OK") {
                     $( "#dialogEvent" ).dialog( "close" ); 
-                    $("tr").remove();
-                    $("td").remove();
                     chargeEventDispo();
                     chargeEventInscrit();
                 } else {
@@ -64,8 +62,7 @@ $(function() {
             success: function( result ) {
                 if(result == "OK") {
                     $( "#dialogEvent" ).dialog( "close" );
-                    $("evtInscrit tr").remove();
-                    $("evtInscrit td").remove();
+                    chargeEventDispo();
                     chargeEventInscrit();
                 }
             }
@@ -105,6 +102,8 @@ $(function() {
 
     //Charge des evenements disponibles
     function chargeEventDispo() {
+        $("tr").remove();
+        $("td").remove();
         $.ajax({
             url: "ServletCollectif?action=listeEvenementsDispo",
             success: function( result ) {
@@ -114,7 +113,7 @@ $(function() {
                     if(result[r].location == undefined) 
                         $( "#trDispo" + result[r].id ).append("<td><strong>Lieu non déterminé</strong></td>");
                     else 
-                        $( "#trDispo" + result[r].id ).append("<td><strong>" + result[r].location.denomination + "</strong></td>");
+                        $( "#trDispo" + result[r].id ).append("<td><strong>" + result[r].location.description + "</strong></td>");
                     $( "#trDispo" + result[r].id ).append("<td>" + date(result[r].date) + "</td>"); 
                     $( "#trDispo" + result[r].id ).append("<td><strong>" + result[r].members.length + "</strong> participants / " + result[r].activity.nbParticipants + "</td>"); 
                 }
@@ -124,6 +123,8 @@ $(function() {
 
     //Chargement des evenements inscrit
     function chargeEventInscrit() {
+        $("tr").remove();
+        $("td").remove();
         $.ajax({
             url: "ServletCollectif?action=listeEvenementsInscrit",
             success: function( result ) {
@@ -133,7 +134,7 @@ $(function() {
                     if(result[r].location == undefined) 
                         $( "#trIns" + result[r].id ).append("<td><strong>Lieu non déterminé</strong></td>");
                     else 
-                        $( "#trIns" + result[r].id ).append("<td><strong>" + result[r].location.denomination + "</strong></td>");
+                        $( "#trIns" + result[r].id ).append("<td><strong>" + result[r].location.description + "</strong></td>");
                     $( "#trIns" + result[r].id ).append("<td>" + date(result[r].date) + "</td>"); 
                     $( "#trIns" + result[r].id ).append("<td><strong>" + result[r].members.length + "</strong> participants / " + result[r].activity.nbParticipants + "</td>"); 
                 }
